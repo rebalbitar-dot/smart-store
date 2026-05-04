@@ -279,11 +279,7 @@ app.get('/api/purchases/:userId', (req, res) => {
     });
 });
 
-app.get('/*', (req, res) => {
-    if (!req.path.startsWith('/api')) {
-        res.sendFile(path.join(__dirname, 'index.html'));
-    }
-});
+
 
 app.listen(process.env.PORT || 3000, () => {
     console.log("Server is running...");
