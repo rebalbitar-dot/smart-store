@@ -1,12 +1,18 @@
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const cors = require('cors');
+const path = require('path');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-
 const db = new sqlite3.Database('./backend_data/database.db');
+
+app.use(express.static(path.join(__dirname, 'frontend')));
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
+});
 
 // SIGNUP
 app.post('/api/signup', (req, res) => {
@@ -273,6 +279,6 @@ app.get('/api/purchases/:userId', (req, res) => {
     });
 });
 
-app.listen(3000, () => {
-    console.log("API server started on port 3000");
+app.listen(process.env.PORT || 3000, () => {
+    console.log("Server is running...");
 });
