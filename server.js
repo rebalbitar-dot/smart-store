@@ -8,10 +8,10 @@ app.use(cors());
 app.use(express.json());
 const db = new sqlite3.Database('./backend_data/database.db');
 
-app.use(express.static(path.join(__dirname, 'frontend')));
+app.use(express.static(path.join(__dirname, './')));
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // SIGNUP
@@ -277,6 +277,12 @@ app.get('/api/purchases/:userId', (req, res) => {
     `, [uId], (err, rows) => {
         res.json(rows || []);
     });
+});
+
+app.get('*', (req, res) => {
+    if (!req.path.startsWith('/api')) {
+        res.sendFile(path.join(__dirname, 'index.html'));
+    }
 });
 
 app.listen(process.env.PORT || 3000, () => {
