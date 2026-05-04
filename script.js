@@ -3,9 +3,7 @@ let allProducts = [];
 let cart = [];
 let activeCategory = 'all';
 
-// =======================
 // SIGNUP
-// =======================
 async function handleSignup() {
     const id = document.getElementById('newId').value;
     const age = document.getElementById('newAge').value;
@@ -13,7 +11,7 @@ async function handleSignup() {
 
     if(!id || !age || !country) return alert("Please fill all fields!");
 
-    const res = await fetch('http://localhost:3000/api/signup', {
+    const res = await fetch('https://smart-store-ailr.onrender.com/api/signup', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({ user_id: id, age, country })
@@ -28,9 +26,7 @@ async function handleSignup() {
     }
 }
 
-// =======================
 // LOGIN / AUTH
-// =======================
 async function handleAuth() {
     let uid = document.getElementById('userIdInput').value;
 
@@ -40,7 +36,7 @@ async function handleAuth() {
 
     if (!uid) return;
 
-    const res = await fetch('http://localhost:3000/api/users');
+    const res = await fetch('https://smart-store-ailr.onrender.com/api/users');
     const users = await res.json();
 
     currentUser = users.find(u => String(u.user_id) === String(uid));
@@ -65,9 +61,7 @@ async function handleAuth() {
     await renderProducts(true);
 }
 
-// =======================
 // VIEW TRACKING (IMPRESSION)
-// =======================
 const viewedOnce = new Set();
 let observer;
 
@@ -88,7 +82,7 @@ function setupViewObserver() {
 
                 viewedOnce.add(pid);
 
-                await fetch('http://localhost:3000/api/interact', {
+                await fetch('https://smart-store-ailr.onrender.com/api/interact', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
@@ -106,13 +100,11 @@ function setupViewObserver() {
     cards.forEach(card => observer.observe(card));
 }
 
-// =======================
 // RENDER PRODUCTS
-// =======================
 async function renderProducts(refresh = false) {
 
     if(refresh) {
-        const res = await fetch(`http://localhost:3000/api/products/${currentUser.user_id}`);
+        const res = await fetch(`https://smart-store-ailr.onrender.com/api/products/${currentUser.user_id}`);
         allProducts = await res.json();
 
         const map = new Map();
@@ -186,12 +178,10 @@ async function renderProducts(refresh = false) {
     setupViewObserver();
 }
 
-// =======================
 // CLICK TRACKING
-// =======================
 async function handleClick(pid) {
 
-    await fetch('http://localhost:3000/api/interact', {
+    await fetch('https://smart-store-ailr.onrender.com/api/interact', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
@@ -206,13 +196,11 @@ async function handleClick(pid) {
     setTimeout(() => renderProducts(true), 200);
 }
 
-// =======================
 // RATE PRODUCT
-// =======================
 async function rate(pid, score, e) {
     e.stopPropagation();
 
-    await fetch('http://localhost:3000/api/rate', {
+    await fetch('https://smart-store-ailr.onrender.com/api/rate', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
@@ -225,9 +213,7 @@ async function rate(pid, score, e) {
     renderProducts(true);
 }
 
-// =======================
 // CART
-// =======================
 function addToCart(pid) {
     const item = allProducts.find(p => p.product_id === pid);
 
@@ -239,9 +225,7 @@ function addToCart(pid) {
     renderCart();
 }
 
-// =======================
 // RENDER CART
-// =======================
 function renderCart() {
     const container = document.getElementById('cartItems');
 
@@ -262,15 +246,13 @@ function renderCart() {
         `Total: ${cart.reduce((s,i)=>s+i.price,0)} $`;
 }
 
-// =======================
 // CHECKOUT
-// =======================
 async function handleCheckout() {
 
     if(cart.length === 0) return alert("Cart is empty!");
 
     for (let item of cart) {
-        await fetch('http://localhost:3000/api/interact', {
+        await fetch('https://smart-store-ailr.onrender.com/api/interact', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -290,9 +272,7 @@ async function handleCheckout() {
     await renderProducts(true);
 }
 
-// =======================
 // MODAL
-// =======================
 function openModal(pid) {
     const p = allProducts.find(x => x.product_id === pid);
 
@@ -319,9 +299,7 @@ function openModal(pid) {
     new bootstrap.Modal(document.getElementById('productModal')).show();
 }
 
-// =======================
 // FILTERS
-// =======================
 function renderFilters() {
     const cats = ['all', ...new Set(allProducts.map(p => p.category))];
 
@@ -334,9 +312,7 @@ function renderFilters() {
         ).join('');
 }
 
-// =======================
 // PURCHASES PAGE
-// =======================
 async function showPurchases() {
     document.getElementById('page-shop').classList.add('d-none');
     document.getElementById('page-purchases').classList.remove('d-none');
@@ -344,7 +320,7 @@ async function showPurchases() {
     // show back button to shop
     document.getElementById('navShopBtn').classList.remove('d-none');
 
-    const res = await fetch(`http://localhost:3000/api/purchases/${currentUser.user_id}`);
+    const res = await fetch(`https://smart-store-ailr.onrender.com/api/purchases/${currentUser.user_id}`);
     const data = await res.json();
 
     const grid = document.getElementById('purchasesGrid');
@@ -364,17 +340,13 @@ async function showPurchases() {
     `).join('');
 }
 
-// =======================
 // BACK TO SHOP
-// =======================
 function backToShop() {
     document.getElementById('page-purchases').classList.add('d-none');
     document.getElementById('page-shop').classList.remove('d-none');
 }
 
-// =======================
 // LOGOUT
-// =======================
 function handleLogout() {
     localStorage.removeItem('savedUserId');
     currentUser = null;
@@ -385,9 +357,7 @@ function handleLogout() {
     document.getElementById('navShopBtn').classList.add('d-none');
 }
 
-// =======================
 // AUTO LOGIN
-// =======================
 window.onload = () => {
     const savedId = localStorage.getItem('savedUserId');
     if (savedId) {

@@ -8,9 +8,7 @@ app.use(express.json());
 
 const db = new sqlite3.Database('./backend_data/database.db');
 
-// =======================
 // SIGNUP
-// =======================
 app.post('/api/signup', (req, res) => {
     const { user_id, age, country } = req.body;
 
@@ -24,9 +22,7 @@ app.post('/api/signup', (req, res) => {
     );
 });
 
-// =======================
 // MY PURCHASES
-// =======================
 app.get('/api/my-purchases/:userId', (req, res) => {
     const uId = req.params.userId.trim();
 
@@ -43,9 +39,7 @@ app.get('/api/my-purchases/:userId', (req, res) => {
     });
 });
 
-// =======================
-// PRODUCTS (MAIN RECOMMENDATION ENGINE)
-// =======================
+// PRODUCTS 
 app.get('/api/products/:userId', (req, res) => {
     const uId = req.params.userId.trim();
 
@@ -219,9 +213,7 @@ app.get('/api/products/:userId', (req, res) => {
     );
 });
 
-// =======================
-// INTERACT (tracking events)
-// =======================
+// INTERACT 
 app.post('/api/interact', (req, res) => {
     const { user_id, product_id, action } = req.body;
 
@@ -249,9 +241,7 @@ app.post('/api/interact', (req, res) => {
     );
 });
 
-// =======================
 // RATE
-// =======================
 app.post('/api/rate', (req, res) => {
     const { user_id, product_id, rating } = req.body;
 
@@ -262,16 +252,12 @@ app.post('/api/rate', (req, res) => {
     );
 });
 
-// =======================
 // USERS
-// =======================
 app.get('/api/users', (req, res) => {
     db.all("SELECT * FROM users", (err, rows) => res.json(rows || []));
 });
 
-// =======================
 // PURCHASES
-// =======================
 app.get('/api/purchases/:userId', (req, res) => {
     const uId = req.params.userId.trim();
 
