@@ -1,0 +1,66 @@
+:root {
+    --bg-color: #0f172a;
+    --card-bg: #1e293b;
+    --primary-blue: #3b82f6;
+    --text-main: #f8fafc;
+    --accent-purple: #8b5cf6;
+    --gold-star: #fbbf24;
+    --success-green: #22c55e;
+    --error-red: #ef4444;
+}
+
+body { 
+    background-color: var(--bg-color); 
+    color: var(--text-main); 
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    min-height: 100vh;
+}
+
+.navbar { 
+    background-color: var(--card-bg) !important; 
+    border-bottom: 2px solid var(--gold-star);
+}
+
+.product-card { 
+    background-color: var(--card-bg);
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 24px;
+    height: 100%;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+
+.product-card:hover { 
+    transform: translateY(-10px); 
+    border-color: var(--primary-blue);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+}
+
+/* الأوسمة */
+.ia-badge-personal {
+    background: linear-gradient(135deg, #ef4444, #f59e0b);
+    color: white; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold;
+}
+
+.ia-badge-country {
+    background: linear-gradient(135deg, var(--primary-blue), var(--accent-purple));
+    color: white; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold;
+}
+
+.star { font-size: 1.5rem; color: #475569; transition: 0.2s; }
+.star.active { color: var(--gold-star); text-shadow: 0 0 8px rgba(251,191,36,0.5); }
+
+.auth-container {
+    background-color: var(--card-bg);
+    padding: 30px;
+    border-radius: 20px;
+    border: 1px solid #334155;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+.text-info-custom {
+    color: #0dcaf0; font-size: 0.75rem; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase;
+}
+
+.offcanvas { background-color: var(--card-bg); color: white; border-bottom: 2px solid var(--gold-star); }
