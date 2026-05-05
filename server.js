@@ -178,13 +178,23 @@ app.get('/api/products/:userId', (req, res) => {
 
                         // ranking logic (keeps high-rated and engaged items on top)
                         results.sort((a, b) => {
-                            // 1
+                            // 1.
                             const aHated = a.my_rating > 0 && a.my_rating <= 2;
                             const bHated = b.my_rating > 0 && b.my_rating <= 2;
                             if (aHated && !bHated) return 1;
                             if (!aHated && bHated) return -1;
                         
                             // 2
+                            
+                            const typeOrder = { 'personal': 1, 'trending': 2, 'none': 3 }; 
+                            const aOrder = typeOrder[a.rec_type] || 3;
+                            const bOrder = typeOrder[b.rec_type] || 3;
+                        
+                            if (aOrder !== bOrder) {
+                                return aOrder - bOrder;
+                            }
+                        
+                            // 3. 
                             const aRating = a.my_rating || 0;
                             const bRating = b.my_rating || 0;
                             if (aRating >= 4 && bRating < 4) return -1;
@@ -193,20 +203,15 @@ app.get('/api/products/:userId', (req, res) => {
                                 return bRating - aRating;
                             }
                         
-                            // 3
+                            // 4.
                             if (b.final_score !== a.final_score) {
                                 return b.final_score - a.final_score;
                             }
                         
-                            // 4
-                            if (a.rec_type === 'personal' && b.rec_type !== 'personal') return -1;
-                            if (b.rec_type === 'personal' && a.rec_type !== 'personal') return 1;
-                        
-                            // 5
+                            // 5. 
                             const aEng = (a.clicks || 0) * 2 + (a.viewed || 0);
                             const bEng = (b.clicks || 0) * 2 + (b.viewed || 0);
                             return bEng - aEng;
-                    
                         });
 
                         const finalResults = results.map((p, index) => {
