@@ -127,7 +127,7 @@ app.get('/api/products/:userId', (req, res) => {
 
                             // strong engagement signals
                             if (p.clicks > 0) score += 300;
-                            if (p.my_rating >= 4) score += 300;
+                            if (p.my_rating >= 4) score += 2000;
 
                             // social influence score
                             score += (p.social_hits || 0) * 25;
@@ -149,11 +149,11 @@ app.get('/api/products/:userId', (req, res) => {
                                     const priceDiff = Math.abs(p.price - lp.price);
 
                                     if (sameCategory && priceDiff <= lp.price * 0.15) {
-                                        score += 2000;
+                                        score += 500;
                                         strongMatch = true;
                                     }
                                     else if (sameCategory) {
-                                        score += 400;
+                                        score += 200;
                                     }
                                 });
                             }
@@ -178,32 +178,35 @@ app.get('/api/products/:userId', (req, res) => {
 
                         // ranking logic (keeps high-rated and engaged items on top)
                         results.sort((a, b) => {
-
+                            // 1
                             const aHated = a.my_rating > 0 && a.my_rating <= 2;
                             const bHated = b.my_rating > 0 && b.my_rating <= 2;
-
                             if (aHated && !bHated) return 1;
                             if (!aHated && bHated) return -1;
-
+                        
+                            // 2
                             const aRating = a.my_rating || 0;
                             const bRating = b.my_rating || 0;
-
                             if (aRating >= 4 && bRating < 4) return -1;
                             if (bRating >= 4 && aRating < 4) return 1;
-
                             if (aRating >= 4 && bRating >= 4 && bRating !== aRating) {
                                 return bRating - aRating;
                             }
-
-                            if (b.rec_type === 'personal' && a.rec_type !== 'personal') return 1;
+                        
+                            // 3
+                            if (b.final_score !== a.final_score) {
+                                return b.final_score - a.final_score;
+                            }
+                        
+                            // 4
                             if (a.rec_type === 'personal' && b.rec_type !== 'personal') return -1;
-
+                            if (b.rec_type === 'personal' && a.rec_type !== 'personal') return 1;
+                        
+                            // 5
                             const aEng = (a.clicks || 0) * 2 + (a.viewed || 0);
                             const bEng = (b.clicks || 0) * 2 + (b.viewed || 0);
-
-                            if (bEng !== aEng) return bEng - aEng;
-
-                            return b.final_score - a.final_score;
+                            return bEng - aEng;
+                        });
                         });
 
                         const finalResults = results.map((p, index) => {
