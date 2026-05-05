@@ -206,7 +206,7 @@ app.get('/api/products/:userId', (req, res) => {
                             const aEng = (a.clicks || 0) * 2 + (a.viewed || 0);
                             const bEng = (b.clicks || 0) * 2 + (b.viewed || 0);
                             return bEng - aEng;
-                        });
+                    
                         });
 
                         const finalResults = results.map((p, index) => {
