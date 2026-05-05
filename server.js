@@ -22,7 +22,7 @@ app.post('/api/signup', (req, res) => {
         "INSERT INTO users (user_id, age, country) VALUES (?, ?, ?)",
         [user_id, age, country.trim().toLowerCase()],
         (err) => {
-            if (err) return res.status(400).send("ID مستخدم مسبقاً");
+            if (err) return res.status(400).send("This ID already exists!D ");
             res.sendStatus(201);
         }
     );
